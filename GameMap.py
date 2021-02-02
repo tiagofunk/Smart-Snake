@@ -1,25 +1,25 @@
 import random
 from Position import Position
+from Var import *
 
 class GameMap:
 
     def __init__(self):
-        self.MIN   =   0
-        self.CELL  =  10
-        self.SIZE  = 600
-        self.MAX   = 590
-        self.color = (0,0,0)
+        self.color = BLACK
 
     def on_grid_random(self):
-        x = random.randint( self.MIN, self.MAX ) // self.CELL * self.CELL
-        y = random.randint( self.MIN, self.MAX ) // self.CELL * self.CELL
+        x = random.randint( 0, MAX ) // CELL_SIZE * CELL_SIZE
+        y = random.randint( 0, MAX ) // CELL_SIZE * CELL_SIZE
         return Position( x, y )
     
     def its_off_the_map( self, head ):
-        return head.x < MIN or head.x >= SIZE or head.y< MIN or head.y >= SIZE
+        return head.x < 0 or head.x >= MAX or head.y< 0 or head.y >= MAX
+
+    def get_map_size(self):
+        return MAP_SIZE
     
-    def get_size(self):
-        return self.SIZE
+    def get_cell_size(self):
+        return CELL_SIZE
     
-    def get_cell(self):
-        return self.CELL
+    def get_color(self):
+        return self.color

@@ -1,11 +1,9 @@
+from Var import RED
 
 class Apple:
 
     def __init__(self, position):
-        self.color = (255,0,0)
-        self.position = position
-    
-    def set_position(self, position):
+        self.color = RED
         self.position = position
     
     def get_position(self):
