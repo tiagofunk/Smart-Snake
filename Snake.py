@@ -3,12 +3,8 @@ from Var import CELL_SIZE, DOWN, LEFT, MAP_SIZE, RIGHT, UP, WHITE
 
 class Snake:
 
-    def __init__(self):
-        self.body  = [ 
-            Position(MAP_SIZE/2,MAP_SIZE/2),
-            Position(MAP_SIZE/2+CELL_SIZE,MAP_SIZE/2),
-            Position(MAP_SIZE/2+2*CELL_SIZE,MAP_SIZE/2)
-            ]
+    def __init__(self, body):
+        self.body = body
         self.color = WHITE
         self.direction = LEFT
         self.is_dead = False
@@ -63,10 +59,10 @@ class Snake:
             self.body[i] = self.body[i-1]
         
         if self.direction == UP:
-            self.body[0] = Position(self.body[0].x, self.body[0].y-CELL_SIZE)
+            self.body[0] = Position(self.body[0].x, self.body[0].y-1)
         if self.direction == DOWN:
-            self.body[0] = Position(self.body[0].x, self.body[0].y+CELL_SIZE)
+            self.body[0] = Position(self.body[0].x, self.body[0].y+1)
         if self.direction == LEFT:
-            self.body[0] = Position(self.body[0].x-CELL_SIZE, self.body[0].y)
+            self.body[0] = Position(self.body[0].x-1, self.body[0].y)
         if self.direction == RIGHT:
-            self.body[0] = Position(self.body[0].x+CELL_SIZE, self.body[0].y)
+            self.body[0] = Position(self.body[0].x+1, self.body[0].y)

@@ -5,114 +5,129 @@ from GameMap import GameMap
 from Snake import Snake
 from Apple import Apple
 from Position import Position
+from MapReader import MapReader
 from Var import BLACK, CELL_SIZE, GRAY, MAP_SIZE, MAX, RED, SCALE, SCREEN_HEIGHT, SCREEN_WIDTH, TXT_APP_NAME, TXT_GAME_OVER, WHITE
 
-def write_game_over(screen):
-    pygame.font.init()                                ##### inicia font
-    fonte=pygame.font.get_default_font()              ##### carrega com a fonte padrão
-    fontesys=pygame.font.SysFont(fonte, 6*SCALE)      ##### usa a fonte padrão
-    txttela = fontesys.render(TXT_GAME_OVER, 1, RED)  ##### renderiza o texto na cor desejada
-    screen.blit(txttela,(MAP_SIZE*(1/3),MAP_SIZE*(1/3)))
+class UI:
 
-def setup( map ):
-    pygame.init()
+    def __init__(self):
+        self.score = 0
+        self.ticks = 0
+        self.game_over = False
 
-    screen = pygame.display.set_mode( ( SCREEN_WIDTH, SCREEN_HEIGHT ) )
-    pygame.display.set_caption( TXT_APP_NAME )
+        self.mr      = MapReader( "map.ss" )
+        self.map     = GameMap( self.mr.read() )
 
-    #screen.fill( BLACK )
+        aux = int( self.map.get_map_size() / 2 )
+        self.snake = Snake([
+            Position( aux,aux ),
+            Position( aux+CELL_SIZE,aux ),
+            Position( aux+2*CELL_SIZE,aux )
+        ])
 
-    map_skin = pygame.Surface( (MAP_SIZE,MAP_SIZE) )
-    map_skin.fill( map.get_color() )
-    screen.blit( map_skin, (0,0) )
+        self.apple   = Apple( self.map.on_grid_random() )
 
-    return screen
+        pygame.init()
 
-def update_view(screen, map, apple, snake, score, ticks):
-    screen.fill( GRAY )
+        self.screen  = pygame.display.set_mode( (SCREEN_WIDTH, SCREEN_HEIGHT) )
+        pygame.display.set_caption( TXT_APP_NAME )
 
-    map_skin = pygame.Surface( (MAP_SIZE,MAP_SIZE) )
-    map_skin.fill( map.get_color() )
-    screen.blit( map_skin, (0,0) )
+        map_skin = pygame.Surface( (self.map.get_map_size()*SCALE,self.map.get_map_size()*SCALE) )
+        map_skin.fill( self.map.get_color() )
+        self.screen.blit( map_skin, (0,0) )
 
-    apple_skin = pygame.Surface( (CELL_SIZE,CELL_SIZE) )
-    apple_skin.fill( apple.get_color() )
-    screen.blit( apple_skin, apple.get_position().get_coordenates() )
+    def run(self):
+        events = []
 
-    snake_skin = pygame.Surface( (CELL_SIZE,CELL_SIZE) )
-    snake_skin.fill( snake.get_color() )
-    for i in range( 0, snake.get_size() ):
-        screen.blit( snake_skin, snake.get_position(i).get_coordenates() )
-    
-    pygame.font.init()
-    fonte=pygame.font.get_default_font()
-    fontesys=pygame.font.SysFont(fonte, 6*SCALE)
-    str_ = "Score: " + str(score) + " Ticks: " + str(ticks)
-    txttela = fontesys.render(str_, 1, WHITE)
-    screen.blit(txttela,(10*SCALE,MAP_SIZE+SCALE))
+        while True:
+            clock = pygame.time.Clock()
+            clock.tick(10)
+            events = pygame.event.get()
 
-def check_exit( events ):
-    for event in events:
-        if event.type == QUIT:
-            return True
-    return False
+            if self.game_over:
+                self.write_game_over()
+                if self.check_exit(events):
+                    break
 
-def check_direction( event, snake ):
-    if event.type == KEYDOWN:
-        if event.key == K_UP:
-            snake.set_direction( 0 )
-        elif event.key == K_RIGHT:
-            snake.set_direction( 1 )
-        elif event.key == K_DOWN:
-            snake.set_direction( 2 )
-        elif event.key == K_LEFT:
-            snake.set_direction( 3 )
+            else:
+                for event in events:
+                    self.check_direction( event )
+                
+                if self.snake.get_head().equals( self.apple.get_position() ):
+                    self.apple = Apple( self.map.on_grid_random() )
+                    self.snake.increment( Position(0,0) )
+                    self.score += 1
 
-def run():
-    myMap    = GameMap()
-    snake    = Snake()
-    apple    = Apple( myMap.on_grid_random() )
+                if self.snake.bit_his_tail():
+                    self.game_over = True
+                
+                self.snake.update()
 
-    score = 0
-    ticks = 0
-    game_over = False
+                if self.map.collide_on_wall( self.snake.get_head() ):
+                    self.game_over = True
+
+                self.update_view()
+
+            if not self.game_over:
+                self.ticks = self.ticks + 1
+            pygame.display.update()
+
+    def write_game_over(self):
+        pygame.font.init()                                ##### inicia font
+        fonte=pygame.font.get_default_font()              ##### carrega com a fonte padrão
+        fontesys=pygame.font.SysFont(fonte, 6*SCALE)      ##### usa a fonte padrão
+        txttela = fontesys.render(TXT_GAME_OVER, 1, RED)  ##### renderiza o texto na cor desejada
+        self.screen.blit(txttela,(SCREEN_WIDTH*(1/3),SCREEN_WIDTH*(1/3)))
+
+    def update_view(self):
+        self.screen.fill( GRAY )
+
+        map_skin = pygame.Surface( ( self.map.get_map_size(), self.map.get_map_size() ) )
+        map_skin.fill( self.map.get_color() )
+        self.screen.blit( map_skin, (0,0) )
+
+        cell_skin = pygame.Surface( (CELL_SIZE, CELL_SIZE) )
+        for i in range( self.map.get_map_size() ):
+            for j in range( self.map.get_map_size() ):
+                color = self.map.get_color_in_position( i, j )
+                cell_skin.fill( color )
+                self.screen.blit( cell_skin, (i*SCALE,j*SCALE) )
+
+        apple_skin = pygame.Surface( (CELL_SIZE,CELL_SIZE) )
+        apple_skin.fill( self.apple.get_color() )
+        x, y = self.apple.get_position().get_coordenates()
+        x *= SCALE
+        y *= SCALE
+        self.screen.blit( apple_skin, (x,y) )
+
+        snake_skin = pygame.Surface( (CELL_SIZE,CELL_SIZE) )
+        snake_skin.fill( self.snake.get_color() )
+        for i in range( 0, self.snake.get_size() ):
+            x, y = self.snake.get_position(i).get_coordenates()
+            x *= SCALE
+            y *= SCALE
+            self.screen.blit( snake_skin, (x,y) )
         
-    screen = setup( myMap  )
-    events = []
+        pygame.font.init()
+        fonte=pygame.font.get_default_font()
+        fontesys=pygame.font.SysFont(fonte, 6*SCALE)
+        str_ = "Score: " + str(self.score) + " Ticks: " + str(self.ticks)
+        txttela = fontesys.render(str_, 1, WHITE)
+        self.screen.blit(txttela,(10*SCALE,self.map.get_map_size()*SCALE+SCALE))
 
-    while True:
-        clock = pygame.time.Clock()
-        clock.tick(10)
-        events = pygame.event.get()
+    def check_exit( self, events ):
+        for event in events:
+            if event.type == QUIT:
+                return True
+        return False
 
-        if game_over:
-            write_game_over( screen )
-            if check_exit(events):
-                break
-
-        else:
-            for event in events:
-                check_direction( event, snake )
-            
-            if snake.get_head().equals( apple.get_position() ):
-                apple = Apple( myMap.on_grid_random() )
-                snake.increment( Position(0,0) )
-                score = score + 1
-
-            if snake.bit_his_tail():
-                game_over = True
-            
-            snake.update()
-
-            if snake.its_off_the_map( 0, MAX ):
-                game_over = True
-
-            update_view(screen, myMap, apple, snake, score, ticks )
-
-        if not game_over:
-            ticks = ticks + 1
-        pygame.display.update()
-        
-        
-
-run()
+    def check_direction( self, event ):
+        if event.type == KEYDOWN:
+            if event.key == K_UP:
+                self.snake.set_direction( 0 )
+            elif event.key == K_RIGHT:
+                self.snake.set_direction( 1 )
+            elif event.key == K_DOWN:
+                self.snake.set_direction( 2 )
+            elif event.key == K_LEFT:
+                self.snake.set_direction( 3 )

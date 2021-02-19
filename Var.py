@@ -20,3 +20,6 @@ SCREEN_WIDTH  : Final = MAP_SIZE
 
 TXT_APP_NAME  : Final = "SMART SNAKE"
 TXT_GAME_OVER : Final = "GAME OVER"
+
+EMPTY   : Final = "."
+WALL    : Final = "x"
