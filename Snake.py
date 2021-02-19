@@ -1,5 +1,5 @@
 from Position import Position
-from Var import CELL_SIZE, DOWN, LEFT, MAP_SIZE, RIGHT, UP, WHITE
+from Var import DOWN, LEFT, RIGHT, UP, WHITE
 
 class Snake:
 

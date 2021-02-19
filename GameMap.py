@@ -13,8 +13,8 @@ class GameMap:
         x = -1
         y = -1
         while not valid:
-            x = random.randint( 0, len( self.map ) )
-            y = random.randint( 0, len( self.map ) )
+            x = random.randint( 0, len( self.map ) ) - 1
+            y = random.randint( 0, len( self.map ) ) - 1
             if self.map[x][y] == ".":
                 valid = True
         return Position( x, y )

@@ -13,10 +13,6 @@ LEFT   : Final = 3
 
 SCALE     : Final =  10
 CELL_SIZE : Final =  1 * SCALE
-MAP_SIZE  : Final = 60 * SCALE
-MAX       : Final = MAP_SIZE - CELL_SIZE
-SCREEN_HEIGHT : Final = MAP_SIZE + 5 * SCALE
-SCREEN_WIDTH  : Final = MAP_SIZE
 
 TXT_APP_NAME  : Final = "SMART SNAKE"
 TXT_GAME_OVER : Final = "GAME OVER"

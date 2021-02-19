@@ -6,7 +6,7 @@ from Snake import Snake
 from Apple import Apple
 from Position import Position
 from MapReader import MapReader
-from Var import BLACK, CELL_SIZE, GRAY, MAP_SIZE, MAX, RED, SCALE, SCREEN_HEIGHT, SCREEN_WIDTH, TXT_APP_NAME, TXT_GAME_OVER, WHITE
+from Var import CELL_SIZE, GRAY, RED, SCALE, TXT_APP_NAME, TXT_GAME_OVER, WHITE
 
 class UI:
 
@@ -17,6 +17,9 @@ class UI:
 
         self.mr      = MapReader( "map.ss" )
         self.map     = GameMap( self.mr.read() )
+
+        self.SCREEN_WIDTH = self.map.get_map_size()*SCALE
+        self.SCREEN_HEIGTH = self.map.get_map_size()*SCALE + 5*SCALE
 
         aux = int( self.map.get_map_size() / 2 )
         self.snake = Snake([
@@ -29,7 +32,7 @@ class UI:
 
         pygame.init()
 
-        self.screen  = pygame.display.set_mode( (SCREEN_WIDTH, SCREEN_HEIGHT) )
+        self.screen  = pygame.display.set_mode( (self.SCREEN_WIDTH, self.SCREEN_HEIGTH) )
         pygame.display.set_caption( TXT_APP_NAME )
 
         map_skin = pygame.Surface( (self.map.get_map_size()*SCALE,self.map.get_map_size()*SCALE) )
@@ -77,7 +80,7 @@ class UI:
         fonte=pygame.font.get_default_font()              ##### carrega com a fonte padrão
         fontesys=pygame.font.SysFont(fonte, 6*SCALE)      ##### usa a fonte padrão
         txttela = fontesys.render(TXT_GAME_OVER, 1, RED)  ##### renderiza o texto na cor desejada
-        self.screen.blit(txttela,(SCREEN_WIDTH*(1/3),SCREEN_WIDTH*(1/3)))
+        self.screen.blit(txttela,(self.SCREEN_WIDTH*(1/3),self.SCREEN_WIDTH*(1/3)))
 
     def update_view(self):
         self.screen.fill( GRAY )
