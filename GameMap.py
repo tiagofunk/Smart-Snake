@@ -15,7 +15,7 @@ class GameMap:
         while not valid:
             x = random.randint( 0, len( self.map ) ) - 1
             y = random.randint( 0, len( self.map ) ) - 1
-            if self.map[x][y] == ".":
+            if self.map[x][y] == EMPTY:
                 valid = True
         return Position( x, y )
     
@@ -30,7 +30,7 @@ class GameMap:
         return len( self.map )
     
     def get_color_in_position( self, i, j ):
-        if self.map[i][j] == ".":
+        if self.map[i][j] == EMPTY:
             return BLACK
         return WHITE
     

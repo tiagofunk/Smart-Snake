@@ -69,10 +69,10 @@ class UI:
                 if self.map.collide_on_wall( self.snake.get_head() ):
                     self.game_over = True
 
-                self.update_view()
-
-            if not self.game_over:
-                self.ticks = self.ticks + 1
+                self.ticks += 1
+                if not self.game_over:
+                    self.update_view()
+                
             pygame.display.update()
 
     def write_game_over(self):
