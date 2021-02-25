@@ -1,4 +1,3 @@
-from pygame.constants import FINGERDOWN
 from typing_extensions import Final
 
 BLACK : Final = (0,0,0)
