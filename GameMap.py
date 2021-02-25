@@ -8,15 +8,19 @@ class GameMap:
         self.color = BLACK
         self.map = map
 
-    def on_grid_random(self):
-        valid = False
+    def on_grid_random(self, snake):
         x = -1
         y = -1
-        while not valid:
+        while True:
             x = random.randint( 0, len( self.map ) ) - 1
             y = random.randint( 0, len( self.map ) ) - 1
-            if self.map[x][y] == EMPTY:
-                valid = True
+            if self.map[x][y] == WALL:
+                continue
+            for i in range( snake.get_size() ):
+                x_snake, y_snake = snake.get_position( i ).get_coordenates()
+                if x == x_snake and y == y_snake:
+                    continue
+            break
         return Position( x, y )
     
     def its_off_the_map( self, head ):

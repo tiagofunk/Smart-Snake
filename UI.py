@@ -28,7 +28,7 @@ class UI:
             Position( aux+2*CELL_SIZE,aux )
         ])
 
-        self.apple   = Apple( self.map.on_grid_random() )
+        self.apple   = Apple( self.map.on_grid_random( self.snake ) )
 
         pygame.init()
 
@@ -57,7 +57,7 @@ class UI:
                     self.check_direction( event )
                 
                 if self.snake.get_head().equals( self.apple.get_position() ):
-                    self.apple = Apple( self.map.on_grid_random() )
+                    self.apple = Apple( self.map.on_grid_random( self.snake ) )
                     self.snake.increment( Position(0,0) )
                     self.score += 1
 
