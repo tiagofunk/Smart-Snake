@@ -5,7 +5,6 @@ class Snake:
 
     def __init__(self, body):
         self.body = body
-        self.color = WHITE
         self.direction = LEFT
         self.is_dead = False
 
@@ -24,9 +23,6 @@ class Snake:
 
     def get_head(self):
         return self.body[ 0 ]
-    
-    def get_color(self):
-        return self.color
     
     def get_size(self):
         return len( self.body )

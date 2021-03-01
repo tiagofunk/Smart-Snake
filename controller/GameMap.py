@@ -1,18 +1,14 @@
-from controller.Observer import Observer
 import random
+
 from model.Position import Position
 from model.Var import *
 
 class GameMap():
 
     def __init__(self, map):
-        self.color = BLACK
         self.map = map
 
-    #buscar uma lógica melhor
     def on_grid_random(self, snake):
-        x = -1
-        y = -1
         while True:
             x = random.randint( 0, len( self.map ) ) - 1
             y = random.randint( 0, len( self.map ) ) - 1
@@ -48,11 +44,3 @@ class GameMap():
 
     def get_map_size(self):
         return len( self.map )
-    
-    def get_color_in_position( self, i, j ):
-        if self.map[i][j] == EMPTY:
-            return BLACK
-        return WHITE
-    
-    def get_color(self):
-        return self.color
