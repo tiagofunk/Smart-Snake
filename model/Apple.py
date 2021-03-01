@@ -1,8 +1,9 @@
-from Var import RED
+from model.Var import RED
 
 class Apple:
 
     def __init__(self, position):
+        #retirar a cor daqui
         self.color = RED
         self.position = position
     

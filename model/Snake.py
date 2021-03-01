@@ -1,5 +1,5 @@
-from Position import Position
-from Var import DOWN, LEFT, RIGHT, UP, WHITE
+from model.Position import Position
+from model.Var import DOWN, LEFT, RIGHT, UP, WHITE
 
 class Snake:
 
@@ -38,6 +38,7 @@ class Snake:
         self.is_dead = is_dead
     
     def set_direction( self, direction ):
+        # colocar as verificações no game.py
         if not (direction == UP or direction == DOWN or direction == LEFT or direction == RIGHT):
             pass
         elif (self.direction == LEFT and direction == RIGHT or
