@@ -1,6 +1,6 @@
 # Smart-Snake
 
-Implementação do jogo da cobrinha utilizando a bibliotece pygame no python.
+Implementação do jogo da cobrinha utilizando a biblioteca pygame no python.
 
 Para executar e jogar:
 
