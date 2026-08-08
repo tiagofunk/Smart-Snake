@@ -2,6 +2,20 @@
 
 Implementação do jogo da cobrinha utilizando a biblioteca pygame no python.
 
+# Como executar
+
+Para criar um ambiente virtual para o Python:
+
+    python -m venv venv
+
+Para carregar o ambiente virtual:
+
+    source venv/bin/activate
+
+Para instalar as dependências:
+
+    pip install -r requirements.txt
+
 Para executar e jogar:
 
     python main.py
